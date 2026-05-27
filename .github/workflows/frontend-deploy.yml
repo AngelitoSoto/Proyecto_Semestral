@@ -37,6 +37,12 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ec2-user/app
-            docker compose pull
-            docker compose up -d
+            docker pull ${{ secrets.DOCKER_USERNAME }}/despacho-front:latest
+
+            docker stop despacho-front || true
+            docker rm despacho-front || true
+
+            docker run -d \
+            --name despacho-front \
+            -p 80:80 \
+            ${{ secrets.DOCKER_USERNAME }}/despacho-front:latest
